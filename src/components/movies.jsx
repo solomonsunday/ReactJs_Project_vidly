@@ -2,16 +2,22 @@ import React, { Component } from "react";
 import Like from "./common/like";
 import Pagination from "./common/pagination";
 import { getMovies } from "../services/fakeMovieService";
+import { getGenres } from "../services/fakeGenreService";
 import { paginate } from "../utils/paginate";
-import Genre from "./genres/genre";
+import ListGroup from "./common/listGroup";
 
 class Movies extends Component {
   state = {
     // properties are initialized here...
-    movies: getMovies(),
+    movies: [],
+    genres: [],
     currentPage: 1,
     pageSize: 4
   };
+
+  componentDidMount() {
+    this.setState({ movies: getMovies(), genres: getGenres() }); // this will be called when there is a change in the DOM.
+  }
 
   handleLike = movie => {
     const movies = [...this.state.movies];
@@ -21,7 +27,6 @@ class Movies extends Component {
     this.setState({ movies });
   };
 
-  handleGengre = movie => {};
   handleDelete = movie => {
     const movies = this.state.movies.filter(m => m._id !== movie._id);
     this.setState({ movies });
@@ -29,6 +34,10 @@ class Movies extends Component {
 
   handlePageChange = page => {
     this.setState({ currentPage: page });
+  };
+
+  handleGenreSelect = genre => {
+    console.log(genre);
   };
 
   render() {
@@ -42,8 +51,11 @@ class Movies extends Component {
     return (
       <React.Fragment>
         <div className="row">
-          <div className="col-2 text-center ">
-            <Genre />
+          <div className="col-2 text-center">
+            <ListGroup
+              items={this.state.genres}
+              onItemSelect={this.handleGenreSelect}
+            />
           </div>
           <div className="col-md-10">
             <p>Showing {count} Movies in the Database</p>
