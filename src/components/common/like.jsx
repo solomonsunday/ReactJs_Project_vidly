@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 
 // imput of this component is liked: boolean
 // output:onClick.

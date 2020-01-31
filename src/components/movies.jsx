@@ -1,11 +1,11 @@
 import React, { Component } from "react";
-// import Like from "./common/like";
 import Pagination from "./common/pagination";
 import { getMovies } from "../services/fakeMovieService";
 import { getGenres } from "../services/fakeGenreService";
 import { paginate } from "../utils/paginate";
 import ListGroup from "./common/listGroup";
 import MoviesTable from "../moviesTable";
+import _ from "lodash";
 
 class Movies extends Component {
   state = {
@@ -13,11 +13,12 @@ class Movies extends Component {
     movies: [],
     genres: [],
     currentPage: 1,
-    pageSize: 4
+    pageSize: 4,
+    sortColumn: { path: "title", order: "asc" }
   };
 
   componentDidMount() {
-    const genres = [{ name: "All Genres" }, ...getGenres()];
+    const genres = [{ _id: "", name: "All Genres" }, ...getGenres()];
     this.setState({ movies: getMovies(), genres }); // this will be called when there is a change in the DOM.
   }
 
@@ -42,11 +43,24 @@ class Movies extends Component {
     this.setState({ selectedGenre: genre, currentPage: 1 });
   };
 
+  handleSort = path => {
+    const sortColumn = { ...this.state.sortColumn };
+    if (sortColumn.path === path)
+      sortColumn.order = sortColumn.order === "asc" ? "desc" : "asc";
+    else {
+      sortColumn.path = path;
+      sortColumn.order = "asc";
+    }
+
+    this.setState({ sortColumn });
+  };
+
   render() {
     const { length: count } = this.state.movies;
     const {
       pageSize,
       currentPage,
+      sortColumn,
       selectedGenre,
       movies: allMovies
     } = this.state;
@@ -57,6 +71,10 @@ class Movies extends Component {
       selectedGenre && selectedGenre._id
         ? allMovies.filter(m => m.genre._id === selectedGenre._id)
         : allMovies;
+
+    // const sorted = _.orderBy(filtered, [sortColumn.path], [sortColumn.order]);
+
+    // const movies = paginate(sorted, filtered, currentPage, pageSize);
 
     const movies = paginate(filtered, currentPage, pageSize);
 
@@ -76,6 +94,7 @@ class Movies extends Component {
               movies={movies}
               onLike={this.handleLike}
               onDelete={this.handleDelete}
+              onSort={this.handleSort}
             />
             {/* pagination with its inputs and an onpagechange event */}
             <Pagination

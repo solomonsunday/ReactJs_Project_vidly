@@ -27,7 +27,7 @@ const movies = [{
     title: "Get Out",
     genre: {
       _id: "5b21ca3eeb7f6fbccd471820",
-      name: "Action"
+      name: "Thriller"
     },
     numberInStock: 8,
     dailyRentalRate: 3.5
