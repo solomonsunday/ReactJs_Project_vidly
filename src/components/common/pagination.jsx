@@ -22,9 +22,9 @@ const Pagination = props => {
             style={{ cursor: "pointer" }}
             //Note this conditional statement
           >
-            <a className="page-link" onClick={() => onPageChange(page)}>
+            <p className="page-link" onClick={() => onPageChange(page)}>
               {page}
-            </a>
+            </p>
           </li>
         ))}
       </ul>
